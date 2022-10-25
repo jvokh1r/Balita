@@ -60,8 +60,7 @@ def detail(request, slug):
         name = request.POST.get('name')
         email = request.POST.get('email')
         msg = request.POST.get('msg')
-        Comment.objects.create(name='name', email='email', msg='msg')
-    return redirect('/comment')
+        comments = Comment.objects.create(name=name, email=email, msg=msg)
     # base objects
     posts_pop = Article.objects.all().order_by('-views')[:3]
     cats = Category.objects.all()
@@ -69,24 +68,10 @@ def detail(request, slug):
     posts = Article.objects.filter(is_published=True)
     for cat in cats:
         cat.n = len(Article.objects.filter(cat=cat))
-
     # main
-    obj = Article.objects.get(slug=slug)
+    obj = posts.get(slug=slug)
     obj.views += 1
     obj.save()
-
-    form = FormComment(request.POST or None)
-    if form.is_valid():
-        form.save()
-    name = request.POST.get('name')
-    email = request.POST.get('email')
-    website = request.POST.get('website')
-    msg = request.POST.get('msg')
-    Comment.objects.create(name='name', email='email', website='website', msg='msg')
-    return redirect(f'/blog/{slug}')
-
-    comments = Comment.object.filer(article=obj)
-
     context = {
         # base
         'cats': cats,
@@ -96,7 +81,6 @@ def detail(request, slug):
         'form': form,
         # main
         'obj': obj,
-        'comment': comments
     }
     return render(request, 'blog-single.html', context)
 

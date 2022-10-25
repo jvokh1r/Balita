@@ -26,7 +26,7 @@ class Category(models.Model):
 class Article(models.Model):
     title = models.CharField(max_length=50)
     slug = models.SlugField(unique=True, blank=True)
-    # image = models.ImageField(upload_to='article/')
+    image = models.ImageField(upload_to='media/')
     content = models.TextField()
     is_published = models.BooleanField(default=False)
     cat = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -51,3 +51,6 @@ class Comment(models.Model):
 @receiver(pre_save, sender=Article)
 def voice_pre_save(sender, instance, *args, **kwargs):
     instance.slug = slugify(instance.title)
+
+
+    
